@@ -1,878 +1,487 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eLite Division League - Season 6</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Elite Division League - Season 6</title>
+    <!-- Tailwind CSS CDN for structure -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* eFootball Signature Theme Configuration Engine */
+        /* CSS VARIABLE COLOR ENGINE - ABSOLUTE CONTRAST GUARANTEE */
         :root {
-            --ef-bg: linear-gradient(135deg, #050b1a 0%, #0a142c 50%, #0f2042 100%);
-            --ef-card: rgba(16, 28, 58, 0.75);
-            --ef-border: rgba(230, 253, 0, 0.25);
-            --ef-text: #f8fafc;
-            --ef-text-muted: #94a3b8;
-            --ef-neon-yellow: #e6fd00;
-            --ef-neon-pink: #ff007f;
-            --ef-header-bg: rgba(10, 20, 44, 0.85);
-            --ef-table-hover: rgba(230, 253, 0, 0.05);
+            --bg-main: #f3f4f6;
+            --bg-card: #ffffff;
+            --border-color: #e5e7eb;
+            --text-title: #111827;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --fixture-bg: #f9fafb;
+            --fixture-border: #e5e7eb;
+            --vs-bg: #e5e7eb;
+            --vs-text: #16a34a;
         }
 
-        [data-theme="light"] {
-            --ef-bg: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            --ef-card: #ffffff;
-            --ef-border: rgba(10, 20, 44, 0.15);
-            --ef-text: #0f172a;
-            --ef-text-muted: #475569;
-            --ef-neon-yellow: #0052cc; 
-            --ef-neon-pink: #d90429;
-            --ef-header-bg: #ffffff;
-            --ef-table-hover: rgba(0, 82, 204, 0.05);
+        html.dark, body.dark {
+            --bg-main: #0b0f19;
+            --bg-card: #111827;
+            --border-color: #1f2937;
+            --text-title: #ccff00; /* Distinct glowing neon title for dark mode */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --fixture-bg: #1f2937;
+            --fixture-border: #374151;
+            --vs-bg: #1f2937;
+            --vs-text: #a3e635;
         }
 
+        /* Core Application Layout Bindings */
         body {
-            background: var(--ef-bg);
-            background-attachment: fixed;
-            color: var(--ef-text);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            transition: background 0.4s ease, color 0.4s ease;
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
         }
-
-        .header-banner {
-            text-align: center;
-            padding: 35px 20px;
-            background: var(--ef-header-bg);
-            border-bottom: 3px solid var(--ef-neon-pink);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            backdrop-filter: blur(10px);
-            margin-bottom: 30px;
-            position: relative;
-            transition: background 0.4s ease;
+        .theme-card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
         }
-
-        .league-title {
-            font-size: 2.8rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            background: linear-gradient(to right, var(--ef-text), var(--ef-neon-yellow), var(--ef-neon-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+        .main-title {
+            color: var(--text-title) !important;
         }
-
-        .league-subtitle {
-            color: var(--ef-text-muted) !important;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-top: 8px;
-            margin-bottom: 0;
-            transition: color 0.4s ease;
+        .text-custom-main {
+            color: var(--text-main) !important;
         }
-
-        .theme-toggle-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--ef-border);
-            color: var(--ef-text);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .text-custom-muted {
+            color: var(--text-muted) !important;
         }
-        [data-theme="dark"] .theme-toggle-btn {
-            background: rgba(255,255,255,0.1);
-        }
-        .theme-toggle-btn:hover {
-            background: var(--ef-neon-yellow);
-            color: #050b1a !important;
-        }
-
-        .secret-trigger {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .card-custom {
-            background: var(--ef-card);
-            border: 1px solid var(--ef-border);
-            border-radius: 14px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            margin-bottom: 25px;
-            transition: background 0.4s ease, border-color 0.4s ease;
-        }
-
-        .card-header-custom {
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid var(--ef-border);
-            color: var(--ef-neon-yellow);
-            font-weight: 800;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .table-custom {
-            --bs-table-bg: transparent !important;
-            --bs-table-color: var(--ef-text) !important;
-            background: transparent !important;
-            color: var(--ef-text) !important;
-            margin-bottom: 0;
-        }
-        .table-custom tr, .table-custom th, .table-custom td {
-            background: transparent !important;
-            color: var(--ef-text) !important;
-            border-color: var(--ef-border) !important;
-        }
-        .table-custom tbody tr:hover {
-            background-color: var(--ef-table-hover) !important;
-        }
-        .table-custom th {
-            color: var(--ef-text-muted) !important;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-        .table-custom td {
-            padding: 14px 10px;
-        }
-
-        .clickable-player {
-            cursor: pointer;
-            font-weight: 700;
-            transition: color 0.2s;
-        }
-        .clickable-player:hover {
-            color: var(--ef-neon-pink) !important;
-            text-decoration: underline;
-        }
-
         .fixture-row {
-            margin: 0 !important;
-            border-bottom: 1px solid var(--ef-border);
-            padding: 12px 6px;
+            background-color: var(--fixture-bg) !important;
+            border: 1px solid var(--fixture-border) !important;
         }
-        .fixture-team { 
-            font-weight: 700; 
-            color: var(--ef-text) !important;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .vs-badge {
+            background-color: var(--vs-bg) !important;
+            color: var(--vs-text) !important;
+            border: 1px solid var(--fixture-border) !important;
         }
-        .fixture-score {
-            font-weight: 900;
-            color: var(--ef-neon-yellow) !important;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 6px 4px;
-            border: 1px solid var(--ef-border);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 38px;
-        }
-        [data-theme="light"] .fixture-score {
-            background: rgba(0,0,0,0.06);
-        }
-
-        .admin-input {
-            width: 40px;
-            background: #050b1a !important;
-            border: 1px solid var(--ef-neon-pink) !important;
-            color: var(--ef-neon-yellow) !important;
-            font-weight: bold;
-            text-align: center;
-            padding: 2px;
-            border-radius: 4px;
-        }
-        
-        .modal-content-custom {
-            background: #0a142c;
-            border: 2px solid var(--ef-neon-yellow);
-            color: white;
-        }
-        [data-theme="light"] .modal-content-custom {
-            background: #ffffff;
-            border: 2px solid var(--ef-neon-yellow);
-            color: #0f172a;
-        }
-        .history-win { color: #00dfa2; font-weight: 900; }
-        .history-loss { color: var(--ef-neon-pink); font-weight: 900; }
-        .history-draw { color: #94a3b8; font-weight: 900; }
-        .admin-badge {
-            background: var(--ef-neon-pink);
-            color: white;
-            font-size: 0.75rem;
-            padding: 3px 9px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .player-mgmt-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--ef-border);
-            border-radius: 8px;
-        }
-        [data-theme="light"] .player-mgmt-box {
-            background: #f8fafc;
+        .admin-glow-bar {
+            border: 1px solid #ec4899;
+            background-color: rgba(236, 72, 153, 0.1);
         }
     </style>
 </head>
-<body>
+<body class="dark transition-colors duration-200 font-sans min-h-screen pb-12">
 
-<div class="header-banner">
-    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
-    <h1 class="league-title mb-1">ELITE DIVISION LEAGUE</h1>
-    <p class="league-subtitle secret-trigger" id="subBanner">Season 6 Official Tournament Hub</p>
-</div>
+    <!-- TOP NAVIGATION BAR -->
+    <header class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center border-b border-gray-300 dark:border-gray-800">
+        <button onclick="toggleAdminMode()" class="px-4 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold rounded-md transition cursor-pointer">
+            ⚙️ Admin Panel
+        </button>
+        <button onclick="toggleTheme()" class="px-4 py-1.5 bg-yellow-500 text-gray-900 dark:bg-gray-800 dark:text-yellow-400 text-xs font-bold rounded-full border border-yellow-600 dark:border-gray-700 transition cursor-pointer">
+            🌓 Light/Dark Mode
+        </button>
+    </header>
 
-<div class="container pb-5">
-    <!-- LIVE REGISTRATION MANAGER -->
-    <div id="admin-panel-header" class="card card-custom d-none p-3 border-danger mb-4">
-        <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
-            <div>
-                <span class="admin-badge me-2">Admin Mode Active</span>
-                <span class="text-muted small">Manage live rosters and scores directly.</span>
-            </div>
-            <div>
-                <button class="btn btn-sm btn-outline-warning me-2" onclick="exportWholeHTMLCode()">Export Entire HTML File</button>
-                <button class="btn btn-sm btn-danger" onclick="logoutAdmin()">Exit Admin</button>
-            </div>
-        </div>
-        
-        <div class="p-3 player-mgmt-box">
-            <h6 class="fw-bold mb-3 text-info">📝 Live Registration Manager (Edit Roster Names)</h6>
-            <div class="row g-2" id="admin-player-roster-inputs">
-                <!-- Dynamically populated via JS -->
-            </div>
-            <div class="text-end mt-3">
-                <button class="btn btn-sm btn-primary px-4 fw-bold" onclick="savePlayerRoster()">Save Registered Names</button>
-            </div>
-        </div>
+    <!-- MAIN DASHBOARD HEADER -->
+    <div class="text-center my-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-wider main-title flex justify-center items-center gap-3">
+            🎮 ELITE DIVISION LEAGUE 🎮
+        </h1>
+        <p class="text-xs md:text-sm font-semibold text-custom-muted tracking-widest mt-1 uppercase">
+            Season 6 Official Tournament Hub
+        </p>
     </div>
 
-    <div class="row g-4">
-        <!-- STANDINGS LEAGUE TABLE -->
-        <div class="col-xl-7 col-lg-12">
-            <div class="card card-custom">
-                <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
-                    <span>📊 Live Standings</span>
-                    <small class="text-muted text-lowercase">Click any player to view history</small>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-custom align-middle text-center">
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 space-y-6">
+
+        <!-- ADMIN CONTROLS INTERFACE BAR -->
+        <div id="adminBar" class="hidden admin-glow-bar rounded-lg p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="bg-pink-600 text-white text-xs font-bold uppercase px-2 py-0.5 rounded animate-pulse">
+                    Admin Mode Active
+                </span>
+                <p class="text-xs text-custom-main">You can now input scores directly inside the fixture rows and update player names.</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="exportHtmlFile()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold text-xs px-4 py-2 rounded shadow transition cursor-pointer">
+                    Export Entire HTML File
+                </button>
+                <button onclick="exitAdmin()" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs px-4 py-2 rounded shadow transition cursor-pointer">
+                    Exit Admin
+                </button>
+            </div>
+        </div>
+
+        <!-- LIVE REGISTRATION MANAGER (ROSTER EDITING) -->
+        <div id="rosterManager" class="hidden theme-card rounded-xl p-5 shadow-lg">
+            <h3 class="text-cyan-600 dark:text-cyan-400 font-bold text-sm mb-4 uppercase tracking-wider flex items-center gap-2">
+                📝 Live Registration Manager (Edit Roster Names)
+            </h3>
+            <div id="rosterInputsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <!-- Roster inputs dynamically generated here -->
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button onclick="saveRosterNames()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-5 py-2 rounded shadow transition cursor-pointer">
+                    Save Registered Names
+                </button>
+            </div>
+        </div>
+
+        <!-- MAIN HUB GRID LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT COLUMN: STANDINGS TABLE -->
+            <div class="lg:col-span-7 theme-card rounded-xl p-5 shadow-xl overflow-hidden">
+                <h2 class="main-title font-black text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+                    📊 Live Table Standings
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
                         <thead>
-                            <tr>
-                                <th width="8%">Pos</th>
-                                <th class="text-start" width="32%">Player Name</th>
-                                <th width="10%">P</th>
-                                <th width="10%">W</th>
-                                <th width="10%">D</th>
-                                <th width="10%">L</th>
-                                <th width="10%">GD</th>
-                                <th width="10%" style="color: var(--ef-neon-yellow);">Pts</th>
+                            <tr class="border-b border-gray-300 dark:border-gray-700 text-custom-muted font-bold uppercase tracking-wider">
+                                <th class="py-3 px-2 text-center w-12">Pos</th>
+                                <th class="py-3 px-3">Player Name</th>
+                                <th class="py-3 px-2 text-center">P</th>
+                                <th class="py-3 px-2 text-center">W</th>
+                                <th class="py-3 px-2 text-center">D</th>
+                                <th class="py-3 px-2 text-center">L</th>
+                                <th class="py-3 px-2 text-center">GD</th>
+                                <th class="py-3 px-2 text-center text-green-600 dark:text-green-400 font-black">Pts</th>
                             </tr>
                         </thead>
-                        <tbody id="standings-body">
-                            <!-- Dynamic rows via JavaScript -->
+                        <tbody id="standingsTableBody" class="divide-y divide-gray-200 dark:divide-gray-800">
+                            <!-- Dynamic rows injected here -->
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- FIXTURES CONTROL SECTION -->
-        <div class="col-xl-5 col-lg-12">
-            <div class="card card-custom">
-                <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
-                    <span>📅 Schedule & Fixtures</span>
-                    <select id="matchday-select" class="form-select form-select-sm border-secondary" style="width: 130px; background: var(--ef-card); color: var(--ef-text);" onchange="renderFixtures()">
-                        <!-- Dynamic options via JavaScript -->
+            <!-- RIGHT COLUMN: FIXTURES AND SCHEDULE -->
+            <div class="lg:col-span-5 theme-card rounded-xl p-5 shadow-xl flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lime-600 dark:text-lime-400 font-black text-sm uppercase tracking-wider flex items-center gap-2">
+                        📅 Schedule & Fixtures
+                    </h2>
+                    <select id="matchdaySelect" onchange="changeMatchday(this.value)" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-xs rounded px-2 py-1 font-bold focus:outline-none cursor-pointer text-gray-900 dark:text-white">
+                        <!-- Matchdays filled dynamic here -->
                     </select>
                 </div>
-                <div class="card-body p-0" id="fixtures-container">
-                    <!-- Dynamic fixtures via JavaScript -->
+
+                <div id="fixturesList" class="space-y-3 flex-1 overflow-y-auto max-h-[500px] pr-1">
+                    <!-- Fixtures injected here -->
                 </div>
-                <div class="card-footer d-none text-end border-top border-secondary" id="admin-save-footer">
-                    <button class="btn btn-sm btn-success px-4" onclick="saveAdminScores()">Save Matchday Scores</button>
+
+                <div id="saveScoresContainer" class="hidden mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
+                    <button onclick="saveMatchdayScores()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded shadow transition cursor-pointer uppercase tracking-wider">
+                        Save Matchday Scores
+                    </button>
                 </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PLAYER PROFILE MODAL POPUP -->
+    <div id="profileModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex justify-center items-center p-4">
+        <div class="theme-card rounded-xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-3 right-3 text-custom-muted hover:text-red-500 text-lg font-bold cursor-pointer">&times;</button>
+            <h3 id="modalPlayerName" class="text-xl font-black main-title mb-1">Player Profile</h3>
+            <p class="text-[10px] uppercase tracking-wider text-custom-muted mb-3">S6 League Profile Summary</p>
+            
+            <hr class="border-gray-200 dark:border-gray-700 my-3">
+            
+            <div class="py-4 text-center">
+                <p id="modalTitlesText" class="text-sm font-bold text-yellow-600 dark:text-yellow-400 tracking-wide">
+                    🏆 No previous league titles
+                </p>
+                <p class="text-xs mt-3 font-semibold bg-gray-100 dark:bg-gray-900/50 p-3 rounded-lg border border-gray-200 dark:border-gray-800 text-custom-main">
+                    No matches played yet in Season 6.
+                </p>
             </div>
         </div>
     </div>
-</div>
 
-<!-- SECRET LOGIN MODAL -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header border-secondary">
-                <h6 class="modal-title text-warning">🔒 Secure Admin Portal</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label small font-monospace">Enter Key Code</label>
-                    <input type="password" id="adminPasswordInput" class="form-control bg-dark text-white border-secondary">
-                </div>
-                <button class="btn btn-primary w-100 fw-bold" onclick="attemptLogin()">Unlock System</button>
-            </div>
-        </div>
-    </div>
-</div>
+    <!-- CORE DATA & LOGIC ENGINE -->
+    <script>
+        // DATA STATE PRESERVATION
+        let players = [
+            { id: 1, name: "Siv Sunar", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 2, name: "Pablo Yt", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 3, name: "Nothing To Say", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 4, name: "Subash Tamang", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 Season 5 Champion" }, 
+            { id: 5, name: "Ganesh Nepali", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 6, name: "Aashik Gurung", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 7, name: "Ashman Titung", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 8, name: "Amir Aslami Magar", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 9, name: "Prateek Khadka", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 10, name: "Aarav D Tamang", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 11, name: "Prabesh Khatri", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 No previous league titles" },
+            { id: 12, name: "Manjil Crestha", p: 0, w: 0, d: 0, l: 0, gd: 0, pts: 0, titles: "🏆 Season 3 Champion" }
+        ];
 
-<!-- PLAYER HISTORY MODAL -->
-<div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title" id="modalPlayerName">Player History</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0" id="modalHistoryContainer">
-                <!-- Matches list loaded here dynamically -->
-            </div>
-        </div>
-    </div>
-</div>
+        let currentMatchday = 1;
+        let isAdminActive = false;
+        let fixtures = {};
 
-<!-- DATA CODE EXPORT MODAL -->
-<div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title text-info">📋 Copy Whole File Contents Below</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="text-muted small">Click inside the box below, press <strong>Ctrl+A</strong> to select all, copy it, and completely replace your old index.html file.</p>
-                <textarea id="exportTextArea" class="form-control bg-dark text-warning font-monospace small" rows="14" readonly onclick="this.select()"></textarea>
-            </div>
-        </div>
-    </div>
-</div>
+        function initFixtures() {
+            let numPlayers = players.length;
+            let totalMatchdays = numPlayers - 1;
+            let matchesPerDay = numPlayers / 2;
+            let tempPlayers = players.map(p => p.id);
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const ADMIN_KEY = "edn2026"; 
-const MAX_VISIBLE_MATCHDAY = 9; 
-
-/* Your active roster from screenshot is now baked into the code as the new default */
-const defaultPlayers = {
-    1: { name: "बसन्त तामाङ", stats: {} },
-    2: { name: "Binaya Shrestha", stats: {} },
-    3: { name: "Siv Sunar", stats: {} },
-    4: { name: "Pablo Yt", stats: {} },
-    5: { name: "Nothing To Say", stats: {} },
-    6: { name: "Subash Tamang", stats: {} },
-    7: { name: "Ganesh Nepali", stats: {} },
-    8: { name: "Aashik Gurung", stats: {} },
-    9: { name: "Player 9", stats: {} },
-    10: { name: "Player 10", stats: {} }
-};
-
-const defaultFixtures = [
-    { matchday: 1, home: 1, away: 10, homeScore: null, awayScore: null },
-    { matchday: 1, home: 2, away: 9, homeScore: null, awayScore: null },
-    { matchday: 1, home: 3, away: 8, homeScore: null, awayScore: null },
-    { matchday: 1, home: 4, away: 7, homeScore: null, awayScore: null },
-    { matchday: 1, home: 5, away: 6, homeScore: null, awayScore: null },
-
-    { matchday: 2, home: 1, away: 9, homeScore: null, awayScore: null },
-    { matchday: 2, home: 10, away: 8, homeScore: null, awayScore: null },
-    { matchday: 2, home: 2, away: 7, homeScore: null, awayScore: null },
-    { matchday: 2, home: 3, away: 6, homeScore: null, awayScore: null },
-    { matchday: 2, home: 4, away: 5, homeScore: null, awayScore: null },
-
-    { matchday: 3, home: 1, away: 8, homeScore: null, awayScore: null },
-    { matchday: 3, home: 9, away: 7, homeScore: null, awayScore: null },
-    { matchday: 3, home: 10, away: 6, homeScore: null, awayScore: null },
-    { matchday: 3, home: 2, away: 5, homeScore: null, awayScore: null },
-    { matchday: 3, home: 3, away: 4, homeScore: null, awayScore: null },
-
-    { matchday: 4, home: 1, away: 7, homeScore: null, awayScore: null },
-    { matchday: 4, home: 8, away: 6, homeScore: null, awayScore: null },
-    { matchday: 4, home: 9, away: 5, homeScore: null, awayScore: null },
-    { matchday: 4, home: 10, away: 4, homeScore: null, awayScore: null },
-    { matchday: 4, home: 2, away: 3, homeScore: null, awayScore: null },
-
-    { matchday: 5, home: 1, away: 6, homeScore: null, awayScore: null },
-    { matchday: 5, home: 7, away: 5, homeScore: null, awayScore: null },
-    { matchday: 5, home: 8, away: 4, homeScore: null, awayScore: null },
-    { matchday: 5, home: 9, away: 3, homeScore: null, awayScore: null },
-    { matchday: 5, home: 10, away: 2, homeScore: null, awayScore: null },
-
-    { matchday: 6, home: 1, away: 5, homeScore: null, awayScore: null },
-    { matchday: 6, home: 6, away: 4, homeScore: null, awayScore: null },
-    { matchday: 6, home: 7, away: 3, homeScore: null, awayScore: null },
-    { matchday: 6, home: 8, away: 2, homeScore: null, awayScore: null },
-    { matchday: 6, home: 9, away: 10, homeScore: null, awayScore: null },
-
-    { matchday: 7, home: 1, away: 4, homeScore: null, awayScore: null },
-    { matchday: 7, home: 5, away: 3, homeScore: null, awayScore: null },
-    { matchday: 7, home: 6, away: 2, homeScore: null, awayScore: null },
-    { matchday: 7, home: 7, away: 10, homeScore: null, awayScore: null },
-    { matchday: 7, home: 8, away: 9, homeScore: null, awayScore: null },
-
-    { matchday: 8, home: 1, away: 3, homeScore: null, awayScore: null },
-    { matchday: 8, home: 4, away: 2, homeScore: null, awayScore: null },
-    { matchday: 8, home: 5, away: 10, homeScore: null, awayScore: null },
-    { matchday: 8, home: 6, away: 9, homeScore: null, awayScore: null },
-    { matchday: 8, home: 7, away: 8, homeScore: null, awayScore: null },
-
-    { matchday: 9, home: 1, away: 2, homeScore: null, awayScore: null },
-    { matchday: 9, home: 3, away: 10, homeScore: null, awayScore: null },
-    { matchday: 9, home: 4, away: 9, homeScore: null, awayScore: null },
-    { matchday: 9, home: 5, away: 8, homeScore: null, awayScore: null },
-    { matchday: 9, home: 6, away: 7, homeScore: null, awayScore: null }
-];
-
-let players = JSON.parse(localStorage.getItem('dl_s6_players')) || defaultPlayers;
-let fixtures = JSON.parse(localStorage.getItem('dl_s6_fixtures')) || defaultFixtures;
-let isAdmin = false;
-
-document.getElementById('subBanner').addEventListener('dblclick', openLoginModal);
-
-function toggleTheme() {
-    const html = document.documentElement;
-    const btn = document.getElementById('themeBtn');
-    if (html.getAttribute('data-theme') === 'dark') {
-        html.setAttribute('data-theme', 'light');
-        btn.innerText = "🌙 Dark Mode";
-    } else {
-        html.setAttribute('data-theme', 'dark');
-        btn.innerText = "☀️ Light Mode";
-    }
-    calculateStandings();
-    renderFixtures();
-}
-
-function openLoginModal() {
-    document.getElementById('adminPasswordInput').value = '';
-    new bootstrap.Modal(document.getElementById('loginModal')).show();
-}
-
-function attemptLogin() {
-    if (document.getElementById('adminPasswordInput').value === ADMIN_KEY) {
-        isAdmin = true;
-        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-        document.getElementById('admin-panel-header').classList.remove('d-none');
-        document.getElementById('admin-save-footer').classList.remove('d-none');
-        renderAdminPlayerFields();
-        renderFixtures();
-    } else {
-        alert("Access Denied.");
-    }
-}
-
-function logoutAdmin() {
-    isAdmin = false;
-    document.getElementById('admin-panel-header').classList.add('d-none');
-    document.getElementById('admin-save-footer').classList.add('d-none');
-    renderFixtures();
-}
-
-function renderAdminPlayerFields() {
-    const container = document.getElementById('admin-player-roster-inputs');
-    container.innerHTML = '';
-    for (let id in players) {
-        container.innerHTML += `
-            <div class="col-md-3 col-6">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-secondary text-white border-secondary small">ID ${id}</span>
-                    <input type="text" id="p-input-${id}" class="form-control bg-dark text-warning border-secondary" value="${players[id].name}">
-                </div>
-            </div>
-        `;
-    }
-}
-
-function savePlayerRoster() {
-    for (let id in players) {
-        const val = document.getElementById(`p-input-${id}`).value.trim();
-        players[id].name = val !== "" ? val : `Player ${id}`;
-    }
-    localStorage.setItem('dl_s6_players', JSON.stringify(players));
-    calculateStandings();
-    renderFixtures();
-    if(isAdmin) renderAdminPlayerFields();
-    alert("Player roster updated dynamically across the platform!");
-}
-
-function calculateStandings() {
-    for (let id in players) {
-        players[id].stats = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
-    }
-    fixtures.forEach(m => {
-        if (m.homeScore !== null && m.awayScore !== null) {
-            let h = players[m.home].stats;
-            let a = players[m.away].stats;
-            h.p++; a.p++;
-            h.gf += m.homeScore; h.ga += m.awayScore;
-            a.gf += m.awayScore; a.ga += m.homeScore;
-            if (m.homeScore > m.awayScore) { h.w++; h.pts += 3; a.l++; }
-            else if (m.homeScore < m.awayScore) { a.w++; a.pts += 3; h.l++; }
-            else { h.d++; h.pts += 1; a.d++; a.pts += 1; }
-            h.gd = h.gf - h.ga; a.gd = a.gf - a.ga;
+            for (let day = 1; day <= totalMatchdays; day++) {
+                fixtures[day] = [];
+                for (let i = 0; i < matchesPerDay; i++) {
+                    let home = tempPlayers[i];
+                    let away = tempPlayers[numPlayers - 1 - i];
+                    fixtures[day].push({
+                        homeId: home,
+                        awayId: away,
+                        homeScore: null,
+                        awayScore: null
+                    });
+                }
+                tempPlayers.splice(1, 0, tempPlayers.pop());
+            }
         }
-    });
+        initFixtures();
 
-    let sorted = Object.keys(players).map(id => ({ id: id, ...players[id] }));
-    sorted.sort((x, y) => y.stats.pts - x.stats.pts || y.stats.gd - x.stats.gd || y.stats.gf - x.stats.gf);
+        window.addEventListener('DOMContentLoaded', () => {
+            buildMatchdayDropdown();
+            renderRosterInputs();
+            calculateAndRenderHub();
+        });
 
-    const tbody = document.getElementById('standings-body');
-    tbody.innerHTML = '';
-    sorted.forEach((p, idx) => {
-        tbody.innerHTML += `
-            <tr>
-                <td><strong>${idx + 1}</strong></td>
-                <td class="text-start clickable-player" onclick="openPlayerHistory(${p.id})">${p.name}</td>
-                <td>${p.stats.p}</td>
-                <td>${p.stats.w}</td>
-                <td>${p.stats.d}</td>
-                <td>${p.stats.l}</td>
-                <td>${p.stats.gd > 0 ? '+' + p.stats.gd : p.stats.gd}</td>
-                <td style="color: var(--ef-neon-yellow); font-weight: 800;">${p.stats.pts}</td>
-            </tr>
-        `;
-    });
-}
-
-function initSelector() {
-    const select = document.getElementById('matchday-select');
-    select.innerHTML = '';
-    for (let i = 1; i <= MAX_VISIBLE_MATCHDAY; i++) {
-        select.innerHTML += `<option value="${i}">Matchday ${i}</option>`;
-    }
-    renderFixtures();
-}
-
-function renderFixtures() {
-    const selectedMatchday = parseInt(document.getElementById('matchday-select').value) || 1;
-    const container = document.getElementById('fixtures-container');
-    container.innerHTML = '';
-
-    const currentMatches = fixtures.filter(m => m.matchday === selectedMatchday);
-    currentMatches.forEach((m, rowIdx) => {
-        const homeName = players[m.home].name;
-        const awayName = players[m.away].name;
-        let scoreDisplay = '';
-        
-        if (isAdmin) {
-            scoreDisplay = `
-                <input type="number" min="0" class="admin-input home-in" value="${m.homeScore !== null ? m.homeScore : ''}">
-                <span class="mx-1 text-muted small">-</span>
-                <input type="number" min="0" class="admin-input away-in" value="${m.awayScore !== null ? m.awayScore : ''}">
-            `;
-        } else {
-            scoreDisplay = (m.homeScore !== null) ? `${m.homeScore} - ${m.awayScore}` : "VS";
+        function toggleTheme() {
+            const body = document.body;
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                document.documentElement.classList.remove('dark');
+            } else {
+                body.classList.add('dark');
+                document.documentElement.classList.add('dark');
+            }
         }
 
-        container.innerHTML += `
-            <div class="fixture-row row g-0 align-items-center">
-                <div class="col-5 fixture-team text-end pe-3">${homeName}</div>
-                <div class="col-2 d-flex justify-content-center">
-                    <div class="fixture-score w-100 text-center">${scoreDisplay}</div>
-                </div>
-                <div class="col-5 fixture-team text-start ps-3">${awayName}</div>
-            </div>
-        `;
-    });
-}
-
-function saveAdminScores() {
-    const selectedMatchday = parseInt(document.getElementById('matchday-select').value) || 1;
-    const rows = document.querySelectorAll('.fixture-row');
-    let idx = 0;
-    fixtures.forEach(m => {
-        if (m.matchday === selectedMatchday) {
-            const hVal = rows[idx].querySelector('.home-in').value;
-            const aVal = rows[idx].querySelector('.away-in').value;
-            m.homeScore = hVal !== '' ? parseInt(hVal) : null;
-            m.awayScore = aVal !== '' ? parseInt(aVal) : null;
-            idx++;
-        }
-    });
-    localStorage.setItem('dl_s6_fixtures', JSON.stringify(fixtures));
-    calculateStandings(); renderFixtures();
-    alert("Match scores updated successfully!");
-}
-
-function openPlayerHistory(playerId) {
-    document.getElementById('modalPlayerName').innerText = `${players[playerId].name} - Match History`;
-    const container = document.getElementById('modalHistoryContainer');
-    container.innerHTML = '';
-    const personalMatches = fixtures.filter(m => m.home == playerId || m.away == playerId);
-    let hasPlayed = false;
-
-    personalMatches.forEach(m => {
-        if (m.homeScore !== null && m.awayScore !== null) {
-            hasPlayed = true;
-            const isHome = m.home == playerId;
-            const oppName = isHome ? players[m.away].name : players[m.home].name;
-            const myS = isHome ? m.homeScore : m.awayScore;
-            const oppS = isHome ? m.awayScore : m.homeScore;
-            let resClass = "history-draw", resTxt = "D";
-            if (myS > oppS) { resClass = "history-win"; resTxt = "W"; }
-            else if (myS < oppS) { resClass = "history-loss"; resTxt = "L"; }
-
-            container.innerHTML += `
-                <div class="row g-0 align-items-center py-2 px-3 border-bottom border-secondary">
-                    <div class="col-2 ${resClass}">[${resTxt}]</div>
-                    <div class="col-7 text-muted">vs ${oppName}</div>
-                    <div class="col-3 text-end text-warning fw-bold">${myS} - ${oppS}</div>
-                </div>
-            `;
-        }
-    });
-    if (!hasPlayed) container.innerHTML = `<div class="p-4 text-center text-muted">No matches documented.</div>`;
-    new bootstrap.Modal(document.getElementById('historyModal')).show();
-}
-
-/* FIXED ROOKIE-PROOF ENGINE: Perfectly escaped variables, no syntax errors */
-function exportWholeHTMLCode() {
-    const headSection = document.head.innerHTML;
-    const bodyHTML = document.body.innerHTML;
-    
-    const outputCode = `<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-    \${headSection}
-</head>
-<body>
-    \${bodyHTML}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script>
-<script>
-const ADMIN_KEY = "edn2026"; 
-const MAX_VISIBLE_MATCHDAY = 9; 
-
-const defaultPlayers = \${JSON.stringify(players, null, 4)};
-
-const defaultFixtures = \${JSON.stringify(fixtures, null, 4)};
-
-let players = JSON.parse(localStorage.getItem('dl_s6_players')) || defaultPlayers;
-let fixtures = JSON.parse(localStorage.getItem('dl_s6_fixtures')) || defaultFixtures;
-let isAdmin = false;
-
-document.getElementById('subBanner').addEventListener('dblclick', openLoginModal);
-
-function toggleTheme() {
-    const html = document.documentElement;
-    const btn = document.getElementById('themeBtn');
-    if (html.getAttribute('data-theme') === 'dark') {
-        html.setAttribute('data-theme', 'light');
-        btn.innerText = "🌙 Dark Mode";
-    } else {
-        html.setAttribute('data-theme', 'dark');
-        btn.innerText = "☀️ Light Mode";
-    }
-    calculateStandings();
-    renderFixtures();
-}
-
-function openLoginModal() {
-    document.getElementById('adminPasswordInput').value = '';
-    new bootstrap.Modal(document.getElementById('loginModal')).show();
-}
-
-function attemptLogin() {
-    if (document.getElementById('adminPasswordInput').value === ADMIN_KEY) {
-        isAdmin = true;
-        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-        document.getElementById('admin-panel-header').classList.remove('d-none');
-        document.getElementById('admin-save-footer').classList.remove('d-none');
-        renderAdminPlayerFields();
-        renderFixtures();
-    } else {
-        alert("Access Denied.");
-    }
-}
-
-function logoutAdmin() {
-    isAdmin = false;
-    document.getElementById('admin-panel-header').classList.add('d-none');
-    document.getElementById('admin-save-footer').classList.add('d-none');
-    renderFixtures();
-}
-
-function renderAdminPlayerFields() {
-    const container = document.getElementById('admin-player-roster-inputs');
-    container.innerHTML = '';
-    for (let id in players) {
-        container.innerHTML += \`
-            <div class="col-md-3 col-6">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-secondary text-white border-secondary small">ID \\\${id}</span>
-                    <input type="text" id="p-input-\\\${id}" class="form-control bg-dark text-warning border-secondary" value="\\\${players[id].name}">
-                </div>
-            </div>
-        \`;
-    }
-}
-
-function savePlayerRoster() {
-    for (let id in players) {
-        const val = document.getElementById(\`p-input-\\\${id}\`).value.trim();
-        players[id].name = val !== "" ? val : \`Player \\\${id}\`;
-    }
-    localStorage.setItem('dl_s6_players', JSON.stringify(players));
-    calculateStandings();
-    renderFixtures();
-    if(isAdmin) renderAdminPlayerFields();
-    alert("Player roster updated dynamically across the platform!");
-}
-
-function calculateStandings() {
-    for (let id in players) {
-        players[id].stats = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
-    }
-    fixtures.forEach(m => {
-        if (m.homeScore !== null && m.awayScore !== null) {
-            let h = players[m.home].stats;
-            let a = players[m.away].stats;
-            h.p++; a.p++;
-            h.gf += m.homeScore; h.ga += m.awayScore;
-            a.gf += m.awayScore; a.ga += m.homeScore;
-            if (m.homeScore > m.awayScore) { h.w++; h.pts += 3; a.l++; }
-            else if (m.homeScore < m.awayScore) { a.w++; a.pts += 3; h.l++; }
-            else { h.d++; h.pts += 1; a.d++; a.pts += 1; }
-            h.gd = h.gf - h.ga; a.gd = a.gf - a.ga;
-        }
-    });
-
-    let sorted = Object.keys(players).map(id => ({ id: id, ...players[id] }));
-    sorted.sort((x, y) => y.stats.pts - x.stats.pts || y.stats.gd - x.stats.gd || y.stats.gf - x.stats.gf);
-
-    const tbody = document.getElementById('standings-body');
-    tbody.innerHTML = '';
-    sorted.forEach((p, idx) => {
-        tbody.innerHTML += \`
-            <tr>
-                <td><strong>\\\${idx + 1}</strong></td>
-                <td class="text-start clickable-player" onclick="openPlayerHistory(\\\${p.id})">\\\${p.name}</td>
-                <td>\\\${p.stats.p}</td>
-                <td>\\\${p.stats.w}</td>
-                <td>\\\${p.stats.d}</td>
-                <td>\\\${p.stats.l}</td>
-                <td>\\\${p.stats.gd > 0 ? '+' + p.stats.gd : p.stats.gd}</td>
-                <td style="color: var(--ef-neon-yellow); font-weight: 800;">\\\${p.stats.pts}</td>
-            </tr>
-        \`;
-    });
-}
-
-function initSelector() {
-    const select = document.getElementById('matchday-select');
-    select.innerHTML = '';
-    for (let i = 1; i <= MAX_VISIBLE_MATCHDAY; i++) {
-        select.innerHTML += \`<option value="\\\${i}">Matchday \\\${i}</option>\`;
-    }
-    renderFixtures();
-}
-
-function renderFixtures() {
-    const selectedMatchday = parseInt(document.getElementById('matchday-select').value) || 1;
-    const container = document.getElementById('fixtures-container');
-    container.innerHTML = '';
-
-    const currentMatches = fixtures.filter(m => m.matchday === selectedMatchday);
-    currentMatches.forEach((m, rowIdx) => {
-        const homeName = players[m.home].name;
-        const awayName = players[m.away].name;
-        let scoreDisplay = '';
-        
-        if (isAdmin) {
-            scoreDisplay = \`
-                <input type="number" min="0" class="admin-input home-in" value="\\\${m.homeScore !== null ? m.homeScore : ''}">
-                <span class="mx-1 text-muted small">-</span>
-                <input type="number" min="0" class="admin-input away-in" value="\\\${m.awayScore !== null ? m.awayScore : ''}">
-            \`;
-        } else {
-            scoreDisplay = (m.homeScore !== null) ? \\\`\\\${m.homeScore} - \\\${m.awayScore}\\\` : "VS";
+        function buildMatchdayDropdown() {
+            const select = document.getElementById('matchdaySelect');
+            select.innerHTML = '';
+            for (let m = 1; m <= 11; m++) {
+                let opt = document.createElement('option');
+                opt.value = m;
+                opt.innerText = `Matchday ${m}`;
+                select.appendChild(opt);
+            }
+            select.value = currentMatchday;
         }
 
-        container.innerHTML += \`
-            <div class="fixture-row row g-0 align-items-center">
-                <div class="col-5 fixture-team text-end pe-3">\\\${homeName}</div>
-                <div class="col-2 d-flex justify-content-center">
-                    <div class="fixture-score w-100 text-center">\\\${scoreDisplay}</div>
-                </div>
-                <div class="col-5 fixture-team text-start ps-3">\\\${awayName}</div>
-            </div>
-        \`;
-    });
-}
-
-function saveAdminScores() {
-    const selectedMatchday = parseInt(document.getElementById('matchday-select').value) || 1;
-    const rows = document.querySelectorAll('.fixture-row');
-    let idx = 0;
-    fixtures.forEach(m => {
-        if (m.matchday === selectedMatchday) {
-            const hVal = rows[idx].querySelector('.home-in').value;
-            const aVal = rows[idx].querySelector('.away-in').value;
-            m.homeScore = hVal !== '' ? parseInt(hVal) : null;
-            m.awayScore = aVal !== '' ? parseInt(aVal) : null;
-            idx++;
+        function changeMatchday(val) {
+            currentMatchday = parseInt(val);
+            renderFixturesList();
         }
-    });
-    localStorage.setItem('dl_s6_fixtures', JSON.stringify(fixtures));
-    calculateStandings(); renderFixtures();
-    alert("Match scores updated successfully!");
-}
 
-function openPlayerHistory(playerId) {
-    document.getElementById('modalPlayerName').innerText = \\\`\\\${players[playerId].name} - Match History\\\`;
-    const container = document.getElementById('modalHistoryContainer');
-    container.innerHTML = '';
-    const personalMatches = fixtures.filter(m => m.home == playerId || m.away == playerId);
-    let hasPlayed = false;
-
-    personalMatches.forEach(m => {
-        if (m.homeScore !== null && m.awayScore !== null) {
-            hasPlayed = true;
-            const isHome = m.home == playerId;
-            const oppName = isHome ? players[m.away].name : players[m.home].name;
-            const myS = isHome ? m.homeScore : m.awayScore;
-            const oppS = isHome ? m.awayScore : m.homeScore;
-            let resClass = "history-draw", resTxt = "D";
-            if (myS > oppS) { resClass = "history-win"; resTxt = "W"; }
-            else if (myS < oppS) { resClass = "history-loss"; resTxt = "L"; }
-
-            container.innerHTML += \`
-                <div class="row g-0 align-items-center py-2 px-3 border-bottom border-secondary">
-                    <div class="col-2 \\\${resClass}">[\\\${resTxt}]</div>
-                    <div class="col-7 text-muted">vs \\\${oppName}</div>
-                    <div class="col-3 text-end text-warning fw-bold">\\\${myS} - \\\${oppS}</div>
-                </div>
-            \`;
+        function toggleAdminMode() {
+            if (isAdminActive) {
+                exitAdmin();
+                return;
+            }
+            let passwordInput = prompt("Enter secure admin authentication credentials code:");
+            if (passwordInput === "edn2026") {
+                isAdminActive = true;
+                document.getElementById('adminBar').classList.remove('hidden');
+                document.getElementById('rosterManager').classList.remove('hidden');
+                document.getElementById('saveScoresContainer').classList.remove('hidden');
+                renderFixturesList();
+            } else if (passwordInput !== null) {
+                alert("Invalid configuration permission denied.");
+            }
         }
-    });
-    if (!hasPlayed) container.innerHTML = \\\`<div class="p-4 text-center text-muted">No matches documented.</div>\\\`;
-    new bootstrap.Modal(document.getElementById('historyModal')).show();
-}
 
-function exportWholeHTMLCode() {}
+        function exitAdmin() {
+            isAdminActive = false;
+            document.getElementById('adminBar').classList.add('hidden');
+            document.getElementById('rosterManager').classList.add('hidden');
+            document.getElementById('saveScoresContainer').classList.add('hidden');
+            renderFixturesList();
+        }
 
-window.onload = function() { calculateStandings(); initSelector(); };
-<\/script>
-</body>
-</html>`;
+        function renderRosterInputs() {
+            const container = document.getElementById('rosterInputsGrid');
+            container.innerHTML = '';
+            players.forEach(p => {
+                let wrapper = document.createElement('div');
+                wrapper.className = 'flex items-center gap-1.5 bg-gray-100 dark:bg-gray-900/30 border border-gray-300 dark:border-gray-800 rounded p-1.5';
+                wrapper.innerHTML = `
+                    <span class="text-[10px] text-custom-muted font-bold w-7">ID ${p.id}</span>
+                    <input type="text" id="rosterInput-${p.id}" value="${p.name}" class="w-full bg-white text-gray-900 dark:bg-gray-800 dark:text-white text-xs px-2 py-1 rounded focus:outline-none focus:border-cyan-500 border border-gray-300 dark:border-transparent">
+                `;
+                container.appendChild(wrapper);
+            });
+        }
 
-    let cleanedOutput = outputCode.replace('admin-panel-header" class="card card-custom p-3 border-danger mb-4"', 'admin-panel-header" class="card card-custom d-none p-3 border-danger mb-4"');
-    cleanedOutput = cleanedOutput.replace('admin-save-footer" class="card-footer text-end border-top border-secondary"', 'admin-save-footer" class="card-footer d-none text-end border-top border-secondary"');
+        function saveRosterNames() {
+            players.forEach(p => {
+                const inputVal = document.getElementById(`rosterInput-${p.id}`).value.trim();
+                if (inputVal !== "") {
+                    p.name = inputVal;
+                }
+            });
+            alert("Roster configuration settings updated successfully!");
+            calculateAndRenderHub();
+        }
 
-    document.getElementById('exportTextArea').value = cleanedOutput;
-    new bootstrap.Modal(document.getElementById('exportModal')).show();
-}
+        function calculateAndRenderHub() {
+            players.forEach(p => {
+                p.p = 0; p.w = 0; p.d = 0; p.l = 0; p.gd = 0; p.pts = 0;
+            });
 
-window.onload = function() { calculateStandings(); initSelector(); };
-</script>
+            Object.keys(fixtures).forEach(day => {
+                fixtures[day].forEach(match => {
+                    if (match.homeScore !== null && match.awayScore !== null) {
+                        let h = players.find(p => p.id === match.homeId);
+                        let a = players.find(p => p.id === match.awayId);
+
+                        if (h && a) {
+                            h.p++; a.p++;
+                            let hScore = parseInt(match.homeScore);
+                            let aScore = parseInt(match.awayScore);
+
+                            h.gd += (hScore - aScore);
+                            a.gd += (aScore - hScore);
+
+                            if (hScore > aScore) {
+                                h.w++; h.pts += 3;
+                                a.l++;
+                            } else if (hScore < aScore) {
+                                a.w++; a.pts += 3;
+                                h.l++;
+                            } else {
+                                h.d++; h.pts += 1;
+                                a.d++; a.pts += 1;
+                            }
+                        }
+                    }
+                });
+            });
+
+            let sortedPlayers = [...players].sort((x, y) => {
+                if (y.pts !== x.pts) return y.pts - x.pts;
+                if (y.gd !== x.gd) return y.gd - x.gd;
+                return y.w - x.w;
+            });
+
+            const tbody = document.getElementById('standingsTableBody');
+            tbody.innerHTML = '';
+
+            sortedPlayers.forEach((p, idx) => {
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-200/50 dark:hover:bg-gray-800/40 transition cursor-pointer font-medium";
+                tr.onclick = () => openPlayerProfile(p.id);
+                tr.innerHTML = `
+                    <td class="py-3 px-2 text-center font-bold text-custom-muted">${idx + 1}</td>
+                    <td class="py-3 px-3 font-semibold text-custom-main">${p.name}</td>
+                    <td class="py-3 px-2 text-center text-custom-muted">${p.p}</td>
+                    <td class="py-3 px-2 text-center text-custom-muted">${p.w}</td>
+                    <td class="py-3 px-2 text-center text-custom-muted">${p.d}</td>
+                    <td class="py-3 px-2 text-center text-custom-muted">${p.l}</td>
+                    <td class="py-3 px-2 text-center ${p.gd > 0 ? 'text-blue-500 font-bold' : p.gd < 0 ? 'text-red-500 font-bold' : 'text-custom-muted'}">${p.gd > 0 ? '+' + p.gd : p.gd}</td>
+                    <td class="py-3 px-2 text-center text-green-600 dark:text-green-400 font-extrabold text-base">${p.pts}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            renderFixturesList();
+        }
+
+        function renderFixturesList() {
+            const listContainer = document.getElementById('fixturesList');
+            listContainer.innerHTML = '';
+
+            let currentDayMatches = fixtures[currentMatchday] || [];
+
+            currentDayMatches.forEach((match, index) => {
+                let homePlayer = players.find(p => p.id === match.homeId)?.name || `Unknown (${match.homeId})`;
+                let awayPlayer = players.find(p => p.id === match.awayId)?.name || `Unknown (${match.awayId})`;
+
+                let matchRow = document.createElement('div');
+                matchRow.className = "flex items-center justify-between p-3 fixture-row rounded-lg shadow-sm text-xs md:text-sm font-semibold";
+
+                if (isAdminActive) {
+                    let hVal = match.homeScore !== null ? match.homeScore : '';
+                    let aVal = match.awayScore !== null ? match.awayScore : '';
+                    matchRow.innerHTML = `
+                        <div class="w-[40%] text-left truncate text-custom-main">${homePlayer}</div>
+                        <div class="flex items-center gap-1 justify-center w-[20%]">
+                            <input type="number" min="0" value="${hVal}" id="scoreHome-${index}" class="w-10 text-center bg-white text-gray-900 dark:bg-gray-800 dark:text-white rounded py-1 border border-pink-500 font-bold focus:outline-none">
+                            <span class="text-custom-muted">-</span>
+                            <input type="number" min="0" value="${aVal}" id="scoreAway-${index}" class="w-10 text-center bg-white text-gray-900 dark:bg-gray-800 dark:text-white rounded py-1 border border-pink-500 font-bold focus:outline-none">
+                        </div>
+                        <div class="w-[40%] text-right truncate text-custom-main">${awayPlayer}</div>
+                    `;
+                } else {
+                    let isPlayed = match.homeScore !== null && match.awayScore !== null;
+                    let displayScore = isPlayed ? 
+                        `<span class="bg-gray-200 dark:bg-gray-800 px-2.5 py-1 rounded text-yellow-600 dark:text-yellow-400 font-extrabold tracking-wider border border-gray-300 dark:border-gray-700">${match.homeScore} - ${match.awayScore}</span>` : 
+                        `<span class="vs-badge px-3 py-1 rounded text-[10px] font-black uppercase">VS</span>`;
+                    
+                    matchRow.innerHTML = `
+                        <div class="w-[40%] text-left truncate text-custom-main">${homePlayer}</div>
+                        <div class="w-[20%] text-center flex justify-center">${displayScore}</div>
+                        <div class="w-[40%] text-right truncate text-custom-main">${awayPlayer}</div>
+                    `;
+                }
+                listContainer.appendChild(matchRow);
+            });
+        }
+
+        function saveMatchdayScores() {
+            let currentDayMatches = fixtures[currentMatchday] || [];
+            currentDayMatches.forEach((match, index) => {
+                let hInput = document.getElementById(`scoreHome-${index}`).value;
+                let aInput = document.getElementById(`scoreAway-${index}`).value;
+
+                if (hInput.trim() !== "" && aInput.trim() !== "") {
+                    match.homeScore = parseInt(hInput);
+                    match.awayScore = parseInt(aInput);
+                } else {
+                    match.homeScore = null;
+                    match.awayScore = null;
+                }
+            });
+            alert(`Matchday ${currentMatchday} scores saved!`);
+            calculateAndRenderHub();
+        }
+
+        function openPlayerProfile(id) {
+            let targetPlayer = players.find(p => p.id === id);
+            if (!targetPlayer) return;
+
+            document.getElementById('modalPlayerName').innerText = targetPlayer.name;
+            document.getElementById('modalTitlesText').innerText = targetPlayer.titles || "🏆 No previous league titles";
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        function exportHtmlFile() {
+            let fullHtmlSource = document.documentElement.outerHTML;
+
+            let cleanDocumentMarkup = fullHtmlSource
+                .replace('id="adminBar" class="', 'id="adminBar" class="hidden ')
+                .replace('id="rosterManager" class="', 'id="rosterManager" class="hidden ')
+                .replace('id="saveScoresContainer" class="', 'id="saveScoresContainer" class="hidden ');
+
+            let finalExportOutput = cleanDocumentMarkup.replace(
+                'let isAdminActive = false;', 
+                'let isAdminActive = false;\n        players = ' + JSON.stringify(players) + ';\n        fixtures = ' + JSON.stringify(fixtures) + ';\n        currentMatchday = ' + currentMatchday + ';'
+            );
+
+            let blob = new Blob([`<!DOCTYPE html>\n` + finalExportOutput], { type: "text/html;charset=utf-8" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "index.html";
+            link.click();
+        }
+    </script>
 </body>
 </html>
