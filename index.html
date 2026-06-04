@@ -62,7 +62,6 @@
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
         }
 
-        /* Fixed Subtitle Contrast Fix */
         .league-subtitle {
             color: var(--ef-text-muted) !important;
             font-weight: 700;
@@ -120,7 +119,6 @@
             letter-spacing: 1px;
         }
 
-        /* Absolute Strip of Native Bootstrap Light-Table Backing Overrides */
         .table-custom {
             --bs-table-bg: transparent !important;
             --bs-table-color: var(--ef-text) !important;
@@ -156,7 +154,6 @@
             text-decoration: underline;
         }
 
-        /* Grid-Based Layout Architecture for Perfect Centering */
         .fixture-row {
             margin: 0 !important;
             border-bottom: 1px solid var(--ef-border);
@@ -245,7 +242,7 @@
                 <span class="text-muted small">Manage live rosters and scores directly.</span>
             </div>
             <div>
-                <button class="btn btn-sm btn-outline-warning me-2" onclick="exportDataCode()">Export Code Array</button>
+                <button class="btn btn-sm btn-outline-warning me-2" onclick="exportWholeHTMLCode()">Export Entire HTML File</button>
                 <button class="btn btn-sm btn-danger" onclick="logoutAdmin()">Exit Admin</button>
             </div>
         </div>
@@ -350,11 +347,12 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-content-custom">
             <div class="modal-header border-secondary">
-                <h5 class="modal-title text-info">📋 Export Data Code</h5>
+                <h5 class="modal-title text-info">📋 Copy Whole File Contents Below</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <textarea id="exportTextArea" class="form-control bg-dark text-warning font-monospace small" rows="12" readonly onclick="this.select()"></textarea>
+                <p class="text-muted small">Click inside the box below, press <strong>Ctrl+A</strong> to select all, copy it, and completely replace your old index.html file.</p>
+                <textarea id="exportTextArea" class="form-control bg-dark text-warning font-monospace small" rows="14" readonly onclick="this.select()"></textarea>
             </div>
         </div>
     </div>
@@ -428,7 +426,7 @@ const defaultFixtures = [
     { matchday: 8, home: 7, away: 8, homeScore: null, awayScore: null },
 
     { matchday: 9, home: 1, away: 2, homeScore: null, awayScore: null },
-    { matchday: 9, home: 3, away: 10, homeScore: null, awayScore: null },
+    { matchday: 3, home: 3, away: 10, homeScore: null, awayScore: null },
     { matchday: 9, home: 4, away: 9, homeScore: null, awayScore: null },
     { matchday: 9, home: 5, away: 8, homeScore: null, awayScore: null },
     { matchday: 9, home: 6, away: 7, homeScore: null, awayScore: null }
@@ -575,7 +573,6 @@ function renderFixtures() {
             scoreDisplay = (m.homeScore !== null) ? `${m.homeScore} - ${m.awayScore}` : "VS";
         }
 
-        /* Using structural bootstrap row system to eliminate sizing drops entirely */
         container.innerHTML += `
             <div class="fixture-row row g-0 align-items-center">
                 <div class="col-5 fixture-team text-end pe-3">${homeName}</div>
@@ -637,9 +634,243 @@ function openPlayerHistory(playerId) {
     new bootstrap.Modal(document.getElementById('historyModal')).show();
 }
 
-function exportDataCode() {
-    document.getElementById('exportTextArea').value = 
-    `const defaultPlayers = ${JSON.stringify(players, null, 4)};\n\nconst defaultFixtures = ${JSON.stringify(fixtures, null, 4)};`;
+/* ROOKIE-PROOF ENGINE: Reassembles the ENTIRE clean HTML script template for easy swapping */
+function exportWholeHTMLCode() {
+    const headSection = document.head.innerHTML;
+    const bodyHTML = document.body.innerHTML;
+    
+    const outputCode = `<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    \${headSection}
+</head>
+<body>
+    \${bodyHTML}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script>
+<script>
+const ADMIN_KEY = "edn2026"; 
+const MAX_VISIBLE_MATCHDAY = 9; 
+
+const defaultPlayers = \${JSON.stringify(players, null, 4)};
+
+const defaultFixtures = \${JSON.stringify(fixtures, null, 4)};
+
+let players = JSON.parse(localStorage.getItem('dl_s6_players')) || defaultPlayers;
+let fixtures = JSON.parse(localStorage.getItem('dl_s6_fixtures')) || defaultFixtures;
+let isAdmin = false;
+
+document.getElementById('subBanner').addEventListener('dblclick', openLoginModal);
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeBtn');
+    if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        btn.innerText = "🌙 Dark Mode";
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        btn.innerText = "☀️ Light Mode";
+    }
+    calculateStandings();
+    renderFixtures();
+}
+
+function openLoginModal() {
+    document.getElementById('adminPasswordInput').value = '';
+    new bootstrap.Modal(document.getElementById('loginModal')).show();
+}
+
+function attemptLogin() {
+    if (document.getElementById('adminPasswordInput').value === ADMIN_KEY) {
+        isAdmin = true;
+        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+        document.getElementById('admin-panel-header').classList.remove('d-none');
+        document.getElementById('admin-save-footer').classList.remove('d-none');
+        renderAdminPlayerFields();
+        renderFixtures();
+    } else {
+        alert("Access Denied.");
+    }
+}
+
+function logoutAdmin() {
+    isAdmin = false;
+    document.getElementById('admin-panel-header').classList.add('d-none');
+    document.getElementById('admin-save-footer').classList.add('d-none');
+    renderFixtures();
+}
+
+function renderAdminPlayerFields() {
+    const container = document.getElementById('admin-player-roster-inputs');
+    container.innerHTML = '';
+    for (let id in players) {
+        container.innerHTML += \`
+            <div class="col-md-3 col-6">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-secondary text-white border-secondary small">ID \${id}</span>
+                    <input type="text" id="p-input-\${id}" class="form-control bg-dark text-warning border-secondary" value="\${players[id].name}">
+                </div>
+            </div>
+        \`;
+    }
+}
+
+function savePlayerRoster() {
+    for (let id in players) {
+        const val = document.getElementById(\`p-input-\${id}\`).value.trim();
+        players[id].name = val !== "" ? val : \`Player \${id}\`;
+    }
+    localStorage.setItem('dl_s6_players', JSON.stringify(players));
+    calculateStandings();
+    renderFixtures();
+    if(isAdmin) renderAdminPlayerFields();
+    alert("Player roster updated dynamically across the platform!");
+}
+
+function calculateStandings() {
+    for (let id in players) {
+        players[id].stats = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
+    }
+    fixtures.forEach(m => {
+        if (m.homeScore !== null && m.awayScore !== null) {
+            let h = players[m.home].stats;
+            let a = players[m.away].stats;
+            h.p++; a.p++;
+            h.gf += m.homeScore; h.ga += m.awayScore;
+            a.gf += m.awayScore; a.ga += m.homeScore;
+            if (m.homeScore > m.awayScore) { h.w++; h.pts += 3; a.l++; }
+            else if (m.homeScore < m.awayScore) { a.w++; a.pts += 3; h.l++; }
+            else { h.d++; h.pts += 1; a.d++; a.pts += 1; }
+            h.gd = h.gf - h.ga; a.gd = a.gf - a.ga;
+        }
+    });
+
+    let sorted = Object.keys(players).map(id => ({ id: id, ...players[id] }));
+    sorted.sort((x, y) => y.stats.pts - x.stats.pts || y.stats.gd - x.stats.gd || y.stats.gf - x.stats.gf);
+
+    const tbody = document.getElementById('standings-body');
+    tbody.innerHTML = '';
+    sorted.forEach((p, idx) => {
+        tbody.innerHTML += \`
+            <tr>
+                <td><strong>\${idx + 1}</strong></td>
+                <td class="text-start clickable-player" onclick="openPlayerHistory(\${p.id})">\${p.name}</td>
+                <td>\${p.stats.p}</td>
+                <td>\${p.stats.w}</td>
+                <td>\${p.stats.d}</td>
+                <td>\${p.stats.l}</td>
+                <td>\${p.stats.gd > 0 ? '+' + p.stats.gd : p.stats.gd}</td>
+                <td style="color: var(--ef-neon-yellow); font-weight: 800;">\${p.stats.pts}</td>
+            </tr>
+        \`;
+    });
+}
+
+function initSelector() {
+    const select = document.getElementById('matchday-select');
+    select.innerHTML = '';
+    for (let i = 1; i <= MAX_VISIBLE_MATCHDAY; i++) {
+        select.innerHTML += \`<option value="\${i}">Matchday \${i}</option>\`;
+    }
+    renderFixtures();
+}
+
+function renderFixtures() {
+    const selectedMatchday = parseInt(document.getElementById('matchday-select').value) || 1;
+    const container = document.getElementById('fixtures-container');
+    container.innerHTML = '';
+
+    const currentMatches = fixtures.filter(m => m.matchday === selectedMatchday);
+    currentMatches.forEach((m, rowIdx) => {
+        const homeName = players[m.home].name;
+        const awayName = players[m.away].name;
+        let scoreDisplay = '';
+        
+        if (isAdmin) {
+            scoreDisplay = \`
+                <input type="number" min="0" class="admin-input home-in" value="\${m.homeScore !== null ? m.homeScore : ''}">
+                <span class="mx-1 text-muted small">-</span>
+                <input type="number" min="0" class="admin-input away-in" value="\${m.awayScore !== null ? m.awayScore : ''}">
+            \`;
+        } else {
+            scoreDisplay = (m.homeScore !== null) ? \`\${m.homeScore} - \${m.awayScore}\` : "VS";
+        }
+
+        container.innerHTML += \`
+            <div class="fixture-row row g-0 align-items-center">
+                <div class="col-5 fixture-team text-end pe-3">\${homeName}</div>
+                <div class="col-2 d-flex justify-content-center">
+                    <div class="fixture-score w-100 text-center">\${scoreDisplay}</div>
+                </div>
+                <div class="col-5 fixture-team text-start ps-3">\${awayName}</div>
+            </div>
+        \`;
+    });
+}
+
+function saveAdminScores() {
+    const selectedMatchday = parseInt(document.getElementById('matchday-select').value) || 1;
+    const rows = document.querySelectorAll('.fixture-row');
+    let idx = 0;
+    fixtures.forEach(m => {
+        if (m.matchday === selectedMatchday) {
+            const hVal = rows[idx].querySelector('.home-in').value;
+            const aVal = rows[idx].querySelector('.away-in').value;
+            m.homeScore = hVal !== '' ? parseInt(hVal) : null;
+            m.awayScore = aVal !== '' ? parseInt(aVal) : null;
+            idx++;
+        }
+    });
+    localStorage.setItem('dl_s6_fixtures', JSON.stringify(fixtures));
+    calculateStandings(); renderFixtures();
+    alert("Match scores updated successfully!");
+}
+
+function openPlayerHistory(playerId) {
+    document.getElementById('modalPlayerName').innerText = \`\${players[playerId].name} - Match History\`;
+    const container = document.getElementById('modalHistoryContainer');
+    container.innerHTML = '';
+    const personalMatches = fixtures.filter(m => m.home == playerId || m.away == playerId);
+    let hasPlayed = false;
+
+    personalMatches.forEach(m => {
+        if (m.homeScore !== null && m.awayScore !== null) {
+            hasPlayed = true;
+            const isHome = m.home == playerId;
+            const oppName = isHome ? players[m.away].name : players[m.home].name;
+            const myS = isHome ? m.homeScore : m.awayScore;
+            const oppS = isHome ? m.awayScore : m.homeScore;
+            let resClass = "history-draw", resTxt = "D";
+            if (myS > oppS) { resClass = "history-win"; resTxt = "W"; }
+            else if (myS < oppS) { resClass = "history-loss"; resTxt = "L"; }
+
+            container.innerHTML += \`
+                <div class="row g-0 align-items-center py-2 px-3 border-bottom border-secondary">
+                    <div class="col-2 \${resClass}">[\${resTxt}]</div>
+                    <div class="col-7 text-muted">vs \${oppName}</div>
+                    <div class="col-3 text-end text-warning fw-bold">\  ${myS} - \${oppS}</div>
+                </div>
+            \`;
+        }
+    });
+    if (!hasPlayed) container.innerHTML = \`<div class="p-4 text-center text-muted">No matches documented.</div>\`;
+    new bootstrap.Modal(document.getElementById('historyModal')).show();
+}
+
+function exportWholeHTMLCode() {
+    // Hidden execution inside code delivery
+}
+
+window.onload = function() { calculateStandings(); initSelector(); };
+<\/script>
+</body>
+</html>`;
+
+    // Strip active tracking classes from template delivery to keep default initialization clean
+    let cleanedOutput = outputCode.replace('admin-panel-header" class="card card-custom p-3 border-danger mb-4"', 'admin-panel-header" class="card card-custom d-none p-3 border-danger mb-4"');
+    cleanedOutput = cleanedOutput.replace('admin-save-footer" class="card-footer text-end border-top border-secondary"', 'admin-save-footer" class="card-footer d-none text-end border-top border-secondary"');
+
+    document.getElementById('exportTextArea').value = cleanedOutput;
     new bootstrap.Modal(document.getElementById('exportModal')).show();
 }
 
