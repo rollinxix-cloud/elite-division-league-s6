@@ -24,8 +24,8 @@
             --ef-card: #ffffff;
             --ef-border: rgba(10, 20, 44, 0.15);
             --ef-text: #0f172a;
-            --ef-text-muted: #64748b;
-            --ef-neon-yellow: #0052cc; /* Adaptive primary for light view */
+            --ef-text-muted: #475569;
+            --ef-neon-yellow: #0052cc; 
             --ef-neon-pink: #d90429;
             --ef-header-bg: #ffffff;
             --ef-table-hover: rgba(0, 82, 204, 0.05);
@@ -56,18 +56,28 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 3px;
-            background: linear-gradient(to right, #ffffff, var(--ef-neon-yellow), #ff007f);
+            background: linear-gradient(to right, var(--ef-text), var(--ef-neon-yellow), var(--ef-neon-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
         }
 
-        /* Theme Toggle Switching Button */
+        /* Fixed Subtitle Contrast Fix */
+        .league-subtitle {
+            color: var(--ef-text-muted) !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+            margin-bottom: 0;
+            transition: color 0.4s ease;
+        }
+
         .theme-toggle-btn {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.05);
             border: 1px solid var(--ef-border);
             color: var(--ef-text);
             padding: 6px 14px;
@@ -77,15 +87,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        [data-theme="dark"] .theme-toggle-btn {
+            background: rgba(255,255,255,0.1);
+        }
         .theme-toggle-btn:hover {
             background: var(--ef-neon-yellow);
-            color: #050b1a;
+            color: #050b1a !important;
         }
 
         .secret-trigger {
             cursor: pointer;
             user-select: none;
-            transition: color 0.3s ease;
         }
 
         .card-custom {
@@ -108,59 +120,73 @@
             letter-spacing: 1px;
         }
 
+        /* Absolute Strip of Native Bootstrap Light-Table Backing Overrides */
         .table-custom {
-            color: var(--ef-text);
+            --bs-table-bg: transparent !important;
+            --bs-table-color: var(--ef-text) !important;
+            background: transparent !important;
+            color: var(--ef-text) !important;
             margin-bottom: 0;
         }
+        .table-custom tr, .table-custom th, .table-custom td {
+            background: transparent !important;
+            color: var(--ef-text) !important;
+            border-color: var(--ef-border) !important;
+        }
         .table-custom tbody tr:hover {
-            background-color: var(--ef-table-hover);
+            background-color: var(--ef-table-hover) !important;
         }
         .table-custom th {
-            color: var(--ef-text-muted);
+            color: var(--ef-text-muted) !important;
             font-size: 0.8rem;
             text-transform: uppercase;
-            border-bottom: 2px solid var(--ef-border);
+            font-weight: 700;
         }
         .table-custom td {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
             padding: 14px 10px;
         }
 
         .clickable-player {
-            color: var(--ef-text);
             cursor: pointer;
             font-weight: 700;
             transition: color 0.2s;
         }
         .clickable-player:hover {
-            color: var(--ef-neon-pink);
+            color: var(--ef-neon-pink) !important;
             text-decoration: underline;
         }
 
+        /* Grid-Based Layout Architecture for Perfect Centering */
         .fixture-row {
-            padding: 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin: 0 !important;
+            border-bottom: 1px solid var(--ef-border);
+            padding: 12px 6px;
         }
-        .fixture-team { width: 38%; font-weight: 600; }
+        .fixture-team { 
+            font-weight: 700; 
+            color: var(--ef-text) !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
         .fixture-score {
-            width: 24%;
-            text-align: center;
             font-weight: 900;
-            color: var(--ef-neon-yellow);
-            background: rgba(0,0,0,0.25);
+            color: var(--ef-neon-yellow) !important;
+            background: rgba(0,0,0,0.3);
             border-radius: 8px;
-            padding: 6px 8px;
+            padding: 6px 4px;
+            border: 1px solid var(--ef-border);
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
+            min-height: 38px;
+        }
+        [data-theme="light"] .fixture-score {
+            background: rgba(0,0,0,0.06);
         }
 
         .admin-input {
-            width: 45px;
+            width: 40px;
             background: #050b1a !important;
             border: 1px solid var(--ef-neon-pink) !important;
             color: var(--ef-neon-yellow) !important;
@@ -175,6 +201,11 @@
             border: 2px solid var(--ef-neon-yellow);
             color: white;
         }
+        [data-theme="light"] .modal-content-custom {
+            background: #ffffff;
+            border: 2px solid var(--ef-neon-yellow);
+            color: #0f172a;
+        }
         .history-win { color: #00dfa2; font-weight: 900; }
         .history-loss { color: var(--ef-neon-pink); font-weight: 900; }
         .history-draw { color: #94a3b8; font-weight: 900; }
@@ -187,31 +218,51 @@
             font-weight: bold;
             text-transform: uppercase;
         }
+        .player-mgmt-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--ef-border);
+            border-radius: 8px;
+        }
+        [data-theme="light"] .player-mgmt-box {
+            background: #f8fafc;
+        }
     </style>
 </head>
 <body>
 
 <div class="header-banner">
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
-    <h1 class="league-title mb-1">🎮 eLite Division League 🎮</h1>
-    <p class="text-white-50 fw-bold text-uppercase tracking-wider mb-0 secret-trigger" id="subBanner">Season 6 Official Tournament Hub</p>
+    <h1 class="league-title mb-1">ELITE DIVISION LEAGUE</h1>
+    <p class="league-subtitle secret-trigger" id="subBanner">Season 6 Official Tournament Hub</p>
 </div>
 
 <div class="container pb-5">
-    <div id="admin-panel-header" class="card card-custom d-none p-3 border-danger bg-dark">
-        <div class="d-flex justify-content-between align-items-center">
+    <!-- LIVE REGISTRATION MANAGER -->
+    <div id="admin-panel-header" class="card card-custom d-none p-3 border-danger mb-4">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
             <div>
                 <span class="admin-badge me-2">Admin Mode Active</span>
-                <span class="text-white-50">You can now input scores directly inside the fixture rows.</span>
+                <span class="text-muted small">Manage live rosters and scores directly.</span>
             </div>
             <div>
                 <button class="btn btn-sm btn-outline-warning me-2" onclick="exportDataCode()">Export Code Array</button>
                 <button class="btn btn-sm btn-danger" onclick="logoutAdmin()">Exit Admin</button>
             </div>
         </div>
+        
+        <div class="p-3 player-mgmt-box">
+            <h6 class="fw-bold mb-3 text-info">📝 Live Registration Manager (Edit Roster Names)</h6>
+            <div class="row g-2" id="admin-player-roster-inputs">
+                <!-- Dynamically populated via JS -->
+            </div>
+            <div class="text-end mt-3">
+                <button class="btn btn-sm btn-primary px-4 fw-bold" onclick="savePlayerRoster()">Save Registered Names</button>
+            </div>
+        </div>
     </div>
 
     <div class="row g-4">
+        <!-- STANDINGS LEAGUE TABLE -->
         <div class="col-xl-7 col-lg-12">
             <div class="card card-custom">
                 <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
@@ -233,22 +284,26 @@
                             </tr>
                         </thead>
                         <tbody id="standings-body">
-                            </tbody>
+                            <!-- Dynamic rows via JavaScript -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <!-- FIXTURES CONTROL SECTION -->
         <div class="col-xl-5 col-lg-12">
             <div class="card card-custom">
                 <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
                     <span>📅 Schedule & Fixtures</span>
-                    <select id="matchday-select" class="form-select form-select-sm bg-dark text-info border-secondary" style="width: 130px;" onchange="renderFixtures()">
-                        </select>
+                    <select id="matchday-select" class="form-select form-select-sm border-secondary" style="width: 130px; background: var(--ef-card); color: var(--ef-text);" onchange="renderFixtures()">
+                        <!-- Dynamic options via JavaScript -->
+                    </select>
                 </div>
                 <div class="card-body p-0" id="fixtures-container">
-                    </div>
-                <div class="card-footer d-none bg-dark text-end border-top border-secondary" id="admin-save-footer">
+                    <!-- Dynamic fixtures via JavaScript -->
+                </div>
+                <div class="card-footer d-none text-end border-top border-secondary" id="admin-save-footer">
                     <button class="btn btn-sm btn-success px-4" onclick="saveAdminScores()">Save Matchday Scores</button>
                 </div>
             </div>
@@ -256,16 +311,17 @@
     </div>
 </div>
 
+<!-- SECRET LOGIN MODAL -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content modal-content-custom">
             <div class="modal-header border-secondary">
                 <h6 class="modal-title text-warning">🔒 Secure Admin Portal</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label font-monospace text-white-50 small">Enter Key Code</label>
+                    <label class="form-label small font-monospace">Enter Key Code</label>
                     <input type="password" id="adminPasswordInput" class="form-control bg-dark text-white border-secondary">
                 </div>
                 <button class="btn btn-primary w-100 fw-bold" onclick="attemptLogin()">Unlock System</button>
@@ -274,25 +330,28 @@
     </div>
 </div>
 
+<!-- PLAYER HISTORY MODAL -->
 <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-custom">
             <div class="modal-header border-secondary">
                 <h5 class="modal-title" id="modalPlayerName">Player History</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0" id="modalHistoryContainer">
-                </div>
+                <!-- Matches list loaded here dynamically -->
+            </div>
         </div>
     </div>
 </div>
 
+<!-- DATA CODE EXPORT MODAL -->
 <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-content-custom">
             <div class="modal-header border-secondary">
                 <h5 class="modal-title text-info">📋 Export Data Code</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <textarea id="exportTextArea" class="form-control bg-dark text-warning font-monospace small" rows="12" readonly onclick="this.select()"></textarea>
@@ -303,12 +362,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ==================== CONFIGURATION DATABASE AREA ====================
 const ADMIN_KEY = "edn2026"; 
 const MAX_VISIBLE_MATCHDAY = 9; 
 
-// Simply swap these default values out with real registrations when slots fill up!
-const players = {
+const defaultPlayers = {
     1: { name: "Player 1", stats: {} },
     2: { name: "Player 2", stats: {} },
     3: { name: "Player 3", stats: {} },
@@ -377,6 +434,7 @@ const defaultFixtures = [
     { matchday: 9, home: 6, away: 7, homeScore: null, awayScore: null }
 ];
 
+let players = JSON.parse(localStorage.getItem('dl_s6_players')) || defaultPlayers;
 let fixtures = JSON.parse(localStorage.getItem('dl_s6_fixtures')) || defaultFixtures;
 let isAdmin = false;
 
@@ -392,6 +450,8 @@ function toggleTheme() {
         html.setAttribute('data-theme', 'dark');
         btn.innerText = "☀️ Light Mode";
     }
+    calculateStandings();
+    renderFixtures();
 }
 
 function openLoginModal() {
@@ -405,6 +465,7 @@ function attemptLogin() {
         bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
         document.getElementById('admin-panel-header').classList.remove('d-none');
         document.getElementById('admin-save-footer').classList.remove('d-none');
+        renderAdminPlayerFields();
         renderFixtures();
     } else {
         alert("Access Denied.");
@@ -416,6 +477,33 @@ function logoutAdmin() {
     document.getElementById('admin-panel-header').classList.add('d-none');
     document.getElementById('admin-save-footer').classList.add('d-none');
     renderFixtures();
+}
+
+function renderAdminPlayerFields() {
+    const container = document.getElementById('admin-player-roster-inputs');
+    container.innerHTML = '';
+    for (let id in players) {
+        container.innerHTML += `
+            <div class="col-md-3 col-6">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-secondary text-white border-secondary small">ID ${id}</span>
+                    <input type="text" id="p-input-${id}" class="form-control bg-dark text-warning border-secondary" value="${players[id].name}">
+                </div>
+            </div>
+        `;
+    }
+}
+
+function savePlayerRoster() {
+    for (let id in players) {
+        const val = document.getElementById(`p-input-${id}`).value.trim();
+        players[id].name = val !== "" ? val : `Player ${id}`;
+    }
+    localStorage.setItem('dl_s6_players', JSON.stringify(players));
+    calculateStandings();
+    renderFixtures();
+    if(isAdmin) renderAdminPlayerFields();
+    alert("Player roster updated dynamically across the platform!");
 }
 
 function calculateStandings() {
@@ -472,7 +560,7 @@ function renderFixtures() {
     container.innerHTML = '';
 
     const currentMatches = fixtures.filter(m => m.matchday === selectedMatchday);
-    currentMatches.forEach(m => {
+    currentMatches.forEach((m, rowIdx) => {
         const homeName = players[m.home].name;
         const awayName = players[m.away].name;
         let scoreDisplay = '';
@@ -480,18 +568,21 @@ function renderFixtures() {
         if (isAdmin) {
             scoreDisplay = `
                 <input type="number" min="0" class="admin-input home-in" value="${m.homeScore !== null ? m.homeScore : ''}">
-                <span class="mx-2 text-muted">-</span>
+                <span class="mx-1 text-muted small">-</span>
                 <input type="number" min="0" class="admin-input away-in" value="${m.awayScore !== null ? m.awayScore : ''}">
             `;
         } else {
             scoreDisplay = (m.homeScore !== null) ? `${m.homeScore} - ${m.awayScore}` : "VS";
         }
 
+        /* Using structural bootstrap row system to eliminate sizing drops entirely */
         container.innerHTML += `
-            <div class="fixture-row">
-                <span class="fixture-team text-end pe-3">${homeName}</span>
-                <span class="fixture-score">${scoreDisplay}</span>
-                <span class="fixture-team text-start ps-3">${awayName}</span>
+            <div class="fixture-row row g-0 align-items-center">
+                <div class="col-5 fixture-team text-end pe-3">${homeName}</div>
+                <div class="col-2 d-flex justify-content-center">
+                    <div class="fixture-score w-100 text-center">${scoreDisplay}</div>
+                </div>
+                <div class="col-5 fixture-team text-start ps-3">${awayName}</div>
             </div>
         `;
     });
@@ -512,7 +603,7 @@ function saveAdminScores() {
     });
     localStorage.setItem('dl_s6_fixtures', JSON.stringify(fixtures));
     calculateStandings(); renderFixtures();
-    alert("Scores updated successfully!");
+    alert("Match scores updated successfully!");
 }
 
 function openPlayerHistory(playerId) {
@@ -534,10 +625,10 @@ function openPlayerHistory(playerId) {
             else if (myS < oppS) { resClass = "history-loss"; resTxt = "L"; }
 
             container.innerHTML += `
-                <div class="fixture-row border-secondary px-3">
-                    <span style="width: 15%;" class="${resClass}">[${resTxt}]</span>
-                    <span style="width: 55%;" class="text-white-50">vs ${oppName}</span>
-                    <span style="width: 30%; font-weight: bold;" class="text-end text-warning">${myS} - ${oppS}</span>
+                <div class="row g-0 align-items-center py-2 px-3 border-bottom border-secondary">
+                    <div class="col-2 ${resClass}">[${resTxt}]</div>
+                    <div class="col-7 text-muted">vs ${oppName}</div>
+                    <div class="col-3 text-end text-warning fw-bold">${myS} - ${oppS}</div>
                 </div>
             `;
         }
@@ -547,7 +638,8 @@ function openPlayerHistory(playerId) {
 }
 
 function exportDataCode() {
-    document.getElementById('exportTextArea').value = `const defaultFixtures = ${JSON.stringify(fixtures, null, 4)};`;
+    document.getElementById('exportTextArea').value = 
+    `const defaultPlayers = ${JSON.stringify(players, null, 4)};\n\nconst defaultFixtures = ${JSON.stringify(fixtures, null, 4)};`;
     new bootstrap.Modal(document.getElementById('exportModal')).show();
 }
 
